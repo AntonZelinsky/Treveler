@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Traveler.Models;
+using Traveler.Types;
 using Traveler.Types.Attachments;
 using Traveler.Types.In;
 using Traveler.Types.Out;
@@ -14,7 +11,7 @@ namespace Traveler.Services
 {
     public class FacebookService
     {
-        private FacebookClient _facebookClient;
+        private readonly FacebookClient _facebookClient;
 
         public FacebookService(FacebookClient facebookClient)
         {
@@ -34,13 +31,20 @@ namespace Traveler.Services
 //        }
         public async Task SendTextMessageAsync(long userId, string text)
         {
-            var message = new Message() { Text = text };
+            var message = new Message {Text = text};
             await SendApiMessagesParametersAsync(GenerateResponseModel(userId, message));
         }
+
         public async Task SendButtonTemplateMessageAsync(long userId, string text, List<MessageButton> buttons)
         {
-            var message = new Message() { Attachment = new Attachment(AttachmentType.template, new ButtonTemplate(text, buttons)) };
+            var message = new Message {Attachment = new Attachment(AttachmentType.template, new ButtonTemplate(text, buttons))};
             await SendApiMessagesParametersAsync(GenerateResponseModel(userId, message));
+        }
+
+        public async Task SendSenderActionAsync(long userId, string senderAction)
+        {
+            var senderActionObj = new SenderAction {ActionType = senderAction};
+            await SendApiMessagesParametersAsync(GenerateResponseModel(userId, null, senderActionObj));
         }
 
         private async Task SendApiMessagesParametersAsync(RequestModel requestModel)
@@ -51,7 +55,7 @@ namespace Traveler.Services
 //                {"recipient", recipient},
 //                {"message", message}
 //            };
-            
+
             var result = await _facebookClient.PostAsync("me/messages", requestModel);
             if (!result.IsSuccessStatusCode)
             {
@@ -84,19 +88,20 @@ namespace Traveler.Services
         }
 
         public async Task PostOnWallAsync(string message)
-            => await _facebookClient.PostAsync("me/feed", new { message });
+        {
+            await _facebookClient.PostAsync("me/feed", new {message});
+        }
 
         public async Task SendMessage(Entry entry)
         {
 //                var content = GenerateResponseModel(entry.Messaging[0].Recipient.Id, "I am god!");
 //                var result = await _facebookClient.PostAsync("messages", content);
 //                return new Product { Name = result };
-            
         }
 
-        private RequestModel GenerateResponseModel(long id, Message message)
+        private RequestModel GenerateResponseModel(long id, Message message = null, SenderAction senderAction = null)
         {
-            var responseModel = new RequestModel(id, message);
+            var responseModel = new RequestModel(id, message, senderAction);
             return responseModel;
         }
     }

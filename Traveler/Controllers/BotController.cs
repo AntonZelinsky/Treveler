@@ -67,7 +67,7 @@ namespace Traveler.Controllers
             }
 
             var message = model.Entry[0].Messaging[0];
-            _botService.HandleMessage(message);
+            await _botService.HandleMessage(message);
 
 //            await _facebookService.SendButtonTemplateMessageAsync(model.Entry[0].Messaging[0].Sender.Id, "hello world zz", new List<MessageButton>()
 //                {
