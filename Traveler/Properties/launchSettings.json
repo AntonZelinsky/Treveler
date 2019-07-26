@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/bot",
+      "launchUrl": "https://workplace.facebook.com/chat/t/108787077120386",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

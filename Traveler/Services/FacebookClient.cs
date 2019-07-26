@@ -9,15 +9,10 @@ using Traveler.Models;
 
 namespace Traveler.Services
 {
-    public interface IFacebookClient
-    {
-        Task<T> GetAsync<T>(string accessToken, string endpoint, string args = null);
-        Task PostAsync(string accessToken, string endpoint, object data, string args = null);
-    }
     public class FacebookClient
     {
-        private readonly HttpClient _httpClient;
         private readonly BotConfig _config;
+        private readonly HttpClient _httpClient;
 
         public FacebookClient(IOptions<BotConfig> config)
         {
@@ -26,9 +21,8 @@ namespace Traveler.Services
             {
                 BaseAddress = new Uri(_config.BaseAddress)
             };
-            _httpClient.DefaultRequestHeaders
-                .Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+//            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _config.AuthToken);
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task<T> GetAsync<T>(string endpoint, string args = null)
@@ -41,10 +35,9 @@ namespace Traveler.Services
 
             return JsonConvert.DeserializeObject<T>(result);
         }
+
         public async Task<HttpResponseMessage> PostAsync(string endpoint, object data, string args = null)
         {
-//            var requestMessage = new HttpRequestMessage();
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _config.AuthToken);
             var payload = GetPayload(data);
 
             return await _httpClient.PostAsync($"{endpoint}?access_token={_config.AuthToken}&{args}", payload);
@@ -53,8 +46,13 @@ namespace Traveler.Services
 
         private static StringContent GetPayload(object data)
         {
-            var json = JsonConvert.SerializeObject(data);
+            var serializerSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Ignore
+            };
 
+            var json = JsonConvert.SerializeObject(data, Formatting.None, serializerSettings);
             return new StringContent(json, Encoding.UTF8, "application/json");
         }
     }

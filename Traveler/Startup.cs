@@ -36,6 +36,7 @@ namespace Traveler
             // Add our Config object so it can be injected
             services.Configure<BotConfig>(Configuration.GetSection("BotConfig"));
 
+            services.AddTransient<BotService>();
             services.AddTransient<FacebookService>();
             services.AddTransient<FacebookClient>();
         }
