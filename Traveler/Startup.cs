@@ -37,6 +37,7 @@ namespace Traveler
             services.Configure<BotConfig>(Configuration.GetSection("BotConfig"));
 
             services.AddTransient<FacebookService>();
+            services.AddTransient<FacebookClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

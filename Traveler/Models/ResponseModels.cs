@@ -17,14 +17,14 @@ namespace Traveler.Models
         public Recipient Recipient { get; set; }
 
         [JsonProperty("message")]
-        public Message Message { get; set; }
+        public MessageResponse Message { get; set; }
     }
-//
-//    public partial class Message
-//    {
-//        [JsonProperty("text")]
-//        public string Text { get; set; }
-//    }
+
+    public partial class MessageResponse
+    {
+        [JsonProperty("text")]
+        public string Text { get; set; }
+    }
 
 //    public partial class Recipient
 //    {
