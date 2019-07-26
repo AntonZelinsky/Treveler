@@ -10,7 +10,7 @@ namespace Traveler.Types.Out
         {
             Recipient = new Recipient(id);
             Message = message;
-            SenderAction = senderAction.ActionType;
+            SenderAction = senderAction?.ActionType;
         }
 
         [JsonProperty("recipient", Required = Required.Always)]

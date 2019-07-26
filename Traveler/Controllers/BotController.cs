@@ -29,17 +29,7 @@ namespace Traveler.Controllers
         {
             if (Request.Query["z"].FirstOrDefault() == "z")
             {
-                _facebookService.SendButtonTemplateMessageAsync(100039626505067, "Hiii", new List<MessageButton>
-                    {
-                        new MessageButton
-                        {
-                            Title = "Hello world",
-                            Type = MessageButtonType.Postback,
-                            Payload = "HI"
-                        }
-                    }
-                ).GetAwaiter().GetResult();
-
+                await _botService.HandleTextMessage(null);
                 return 1;
             }
 

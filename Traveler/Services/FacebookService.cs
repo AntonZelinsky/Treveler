@@ -18,17 +18,6 @@ namespace Traveler.Services
             _facebookClient = facebookClient;
         }
 
-//        public async Task HandleMessage(RequestModels model)
-//        {
-//            var s = model.Entry[0].Messaging[0];
-//            //            var content = GenerateResponseModel(s.Sender.Id, "I am god!");
-//            //            var result = await _facebookClient.PostAsync("messages", content);
-//            var message = new Message() { Text = "Hello world" };
-//           await SendMessagesAsync(s.Sender.Id, message);
-////            var sd = await result.Content.ReadAsStringAsync();
-//            
-//
-//        }
         public async Task SendTextMessageAsync(long userId, string text)
         {
             var message = new Message {Text = text};
@@ -47,20 +36,25 @@ namespace Traveler.Services
             await SendApiMessagesParametersAsync(GenerateResponseModel(userId, null, senderActionObj));
         }
 
+        public async Task SendGenericTemplateMessageAsync(long userId, List<GenericTemplateElement> elements)
+        {
+            var message = new Message {Attachment = new Attachment(AttachmentType.template, new GenericTemplate(elements))};
+            await SendApiMessagesParametersAsync(GenerateResponseModel(userId, message));
+        }
+
+        public async Task SendQuickRepliesMessageAsync(long userId, string text, List<QuickReply> replies)
+        {
+            var message = new Message { Text = text, QuickReplies = replies };
+            await SendApiMessagesParametersAsync(GenerateResponseModel(userId, message));
+        }
+
         private async Task SendApiMessagesParametersAsync(RequestModel requestModel)
         {
-//            Recipient recipient = new Recipient(userId);
-//            Dictionary<string, object> parameters = new Dictionary<string, object>()
-//            {
-//                {"recipient", recipient},
-//                {"message", message}
-//            };
-
             var result = await _facebookClient.PostAsync("me/messages", requestModel);
             if (!result.IsSuccessStatusCode)
             {
-                var sresult = await result.Content.ReadAsStringAsync();
-                Debug.Fail(sresult);
+                var content = await result.Content.ReadAsStringAsync();
+                Debug.Fail(content);
             }
         }
 
@@ -85,18 +79,6 @@ namespace Traveler.Services
 //            };
 
             return result;
-        }
-
-        public async Task PostOnWallAsync(string message)
-        {
-            await _facebookClient.PostAsync("me/feed", new {message});
-        }
-
-        public async Task SendMessage(Entry entry)
-        {
-//                var content = GenerateResponseModel(entry.Messaging[0].Recipient.Id, "I am god!");
-//                var result = await _facebookClient.PostAsync("messages", content);
-//                return new Product { Name = result };
         }
 
         private RequestModel GenerateResponseModel(long id, Message message = null, SenderAction senderAction = null)
