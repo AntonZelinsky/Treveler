@@ -15,6 +15,9 @@ namespace Traveler.Types.Attachments
         [JsonProperty(PropertyName = "quick_replies", Required = Required.Default)]
         public IList<QuickReply> QuickReplies { get; set; }
 
+        [JsonProperty(PropertyName = "quick_reply", Required = Required.Default)]
+        public QuickReply QuickReply { get; set; }
+
         [JsonProperty("mid", Required = Required.Default)]
         public string Mid { get; set; }
 

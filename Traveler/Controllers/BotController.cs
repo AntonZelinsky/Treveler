@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Traveler.Services;
-using Traveler.Types.Attachments;
 using Traveler.Types.In;
 
 namespace Traveler.Controllers
@@ -29,7 +27,6 @@ namespace Traveler.Controllers
         {
             if (Request.Query["z"].FirstOrDefault() == "z")
             {
-                await _botService.HandleTextMessage(null);
                 return 1;
             }
 
@@ -58,17 +55,6 @@ namespace Traveler.Controllers
 
             var message = model.Entry[0].Messaging[0];
             await _botService.HandleMessage(message);
-
-//            await _facebookService.SendButtonTemplateMessageAsync(model.Entry[0].Messaging[0].Sender.Id, "hello world zz", new List<MessageButton>()
-//                {
-//                    new MessageButton()
-//                    {
-//                        Title = "Hello world",
-//                        Type = MessageButtonType.Web_Url,
-//                        Url = "https://developers.facebook.com"
-//                    }
-//                }
-//                );
         }
 
         // PUT: api/Bot/5

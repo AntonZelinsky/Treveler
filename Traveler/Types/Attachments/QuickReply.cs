@@ -15,7 +15,7 @@ namespace Traveler.Types.Attachments
     {
         [JsonConverter(typeof(StringEnumConverter))]
         [DefaultValue(null)]
-        [JsonProperty(PropertyName = "content_type", Required = Required.Always)]
+        [JsonProperty(PropertyName = "content_type", Required = Required.Default)]
         public QuickReplyContentType ContentType { get; set; }
 
         [JsonProperty(PropertyName = "title", Required = Required.Default)]

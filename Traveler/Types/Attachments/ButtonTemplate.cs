@@ -6,7 +6,7 @@ namespace Traveler.Types.Attachments
     [JsonObject]
     public class ButtonTemplate : TemplatePayload
     {
-        public ButtonTemplate(string text, List<MessageButton> buttons)
+        public ButtonTemplate(string text, IEnumerable<MessageButton> buttons)
         {
             TemplateType = TemplatePayloadType.button;
             Text = text;
@@ -17,6 +17,6 @@ namespace Traveler.Types.Attachments
         public string Text { get; set; }
 
         [JsonProperty(PropertyName = "buttons", Required = Required.Always)]
-        public IList<MessageButton> Buttons { get; set; }
+        public IEnumerable<MessageButton> Buttons { get; set; }
     }
 }
